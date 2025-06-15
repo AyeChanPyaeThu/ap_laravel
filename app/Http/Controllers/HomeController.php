@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\storePostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 class HomeController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +18,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $data = Post::all();
+        $data = Post::orderBy( 'id', 'desc' )->get();
         return view('home', compact('data'));
     }
 
@@ -36,13 +38,20 @@ class HomeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(storePostRequest $request)
     {
-        $post = new Post();
-        $post->name = $request->name;
-        $post->description = $request->description;
+        //  $validated = $request->validated(); 
 
-        $post->save();
+        // $post = new Post();
+        // $post->name = $request->name;
+        // $post->description = $request->description;
+        //  $post->save();
+
+        Post::create([
+             'name' => $request->name,
+             'description' => $request->description,
+            ] );
+
         return redirect('/posts');
     }
 
@@ -52,9 +61,8 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        $post = Post::findOrFail($id);
         return view('show', compact('post'));
     }
 
@@ -64,9 +72,8 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        $post = Post::findOrFail($id);
         return view('edit', compact('post'));
     }
 
@@ -77,12 +84,17 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(storePostRequest $request, Post $post)
     {
-        $post = Post::findOrFail($id);
-        $post->name = $request->name;
-        $post->description = $request->description;
-        $post->save();
+    
+        // $post->name = $request->name;
+        // $post->description = $request->description;
+        // $post->save();
+
+       $post->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
         return redirect('/posts');
     }
 
@@ -92,9 +104,9 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::findOrFail($id)->delete();
+        $post->delete();
         return redirect('/posts');
     }
 }

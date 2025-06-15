@@ -16,15 +16,15 @@
       <div>
          <h5 class="card-title">{{ $post->name }}</h5>
          <p class="card-text"> {{ $post->description }}</p>
-         <div class="">
+         <div class="form-row">
           <a href="/posts/{{ $post->id }}" class="btn btn-primary">View</a>
           <a href="/posts/{{ $post->id }}/edit" class="btn btn-warning">Edit</a>
-          <form action="/posts/{{ $post->id }}" method="post">
+          <form action="/posts/{{ $post->id }}" method="post" style="display:inline-block">
           @csrf
           @method("DELETE")
-          <button type="submit" class="btn btn-danger">Del</button>
-         </div>
+          <button type="submit" class="btn btn-danger">Delete</button>
         </form>
+         </div>
       </div><hr>
     @endforeach
    

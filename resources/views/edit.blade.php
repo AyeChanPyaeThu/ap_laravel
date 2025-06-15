@@ -8,16 +8,25 @@
     Edit Post
   </div>
   <div class="card-body">
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <form action="/posts/{{ $post->id }}" method="post">
         @csrf
         @method('PUT')
   <div class="form-group">
     <label for="exampleInputEmail1">Name</label>
-    <input value="{{ $post->name }}" type="text" class="form-control" name="name" placeholder="Enter name" required>
+    <input value="{{ old('name', $post->name) }}" type="text" class="form-control" name="name" placeholder="Enter name" >
   </div><br>
   <div class="form-group">
     <label for="exampleInputEmail1">Description</label>
-    <textarea name="description" class="form-control" placeholder="Enter Desc" >{{ $post->description }}</textarea>
+    <textarea name="description" class="form-control" placeholder="Enter Desc" >{{ old('description', $post->description ) }}</textarea>
   </div><br>
   
   <button type="submit" class="btn btn-primary">Submit</button>
