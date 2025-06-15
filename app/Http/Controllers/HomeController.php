@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 
 class HomeController extends Controller
 {
@@ -13,7 +16,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        //
+        $data = Post::all();
+        return view('home', compact('data'));
     }
 
     /**
@@ -23,7 +27,7 @@ class HomeController extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
 
     /**
@@ -34,7 +38,12 @@ class HomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = new Post();
+        $post->name = $request->name;
+        $post->description = $request->description;
+
+        $post->save();
+        return redirect('/posts');
     }
 
     /**
@@ -45,7 +54,8 @@ class HomeController extends Controller
      */
     public function show($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('show', compact('post'));
     }
 
     /**
@@ -56,7 +66,8 @@ class HomeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        return view('edit', compact('post'));
     }
 
     /**
@@ -68,7 +79,11 @@ class HomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->name = $request->name;
+        $post->description = $request->description;
+        $post->save();
+        return redirect('/posts');
     }
 
     /**
@@ -79,6 +94,7 @@ class HomeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id)->delete();
+        return redirect('/posts');
     }
 }
