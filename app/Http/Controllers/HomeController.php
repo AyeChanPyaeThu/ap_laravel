@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Test;
 use App\Models\Post;
+use App\Mail\PostStored;
 use App\Models\Category;
+use App\Mail\PostCreated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Requests\storePostRequest;
 
@@ -21,12 +25,17 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index( Request $request)
     {
-        $posts = Post::pluck('name');
-        dd( $posts );
+        // $posts = Post::pluck('name');
+        // dd( $posts );
+
+        // Mail::raw('Hello World', function($msg){
+        //     $msg->to('hlaing@gmail.com')->subject('Ap Index Function');
+        // });
 
         $data = Post::where('user_id', auth()->id() )->orderBy( 'id', 'desc' )->get();
+        // $request->session()->flash('status', 'Task was successful!');
         return view('home', compact('data'));
     }
 
@@ -50,9 +59,10 @@ class HomeController extends Controller
     public function store(storePostRequest $request)
     {
          $validated = $request->validated(); 
-        Post::create( $validated );
+        $post = Post::create( $validated + ['user_id'=>Auth::user()->id]);
 
-        return redirect('/posts');
+        
+        return redirect('/posts')->with('status', config('ap.message.created'));
     }
 
     /**
