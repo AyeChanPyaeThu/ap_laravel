@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Test;
 use App\Models\Post;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -22,6 +23,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $posts = Post::pluck('name');
+        dd( $posts );
+
         $data = Post::where('user_id', auth()->id() )->orderBy( 'id', 'desc' )->get();
         return view('home', compact('data'));
     }
@@ -57,11 +61,13 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(Post $post, Test $test)
     {
         // if( $post->user_id != auth()->id() ){
         //     abort(403);
         // }
+
+        dd($test);
 
         $this->authorize('view', $post);
         return view('show', compact('post'));

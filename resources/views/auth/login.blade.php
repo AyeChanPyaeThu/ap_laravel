@@ -1,3 +1,5 @@
+          @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 <x-guest-layout>
     <x-jet-authentication-card>
         <x-slot name="logo">
