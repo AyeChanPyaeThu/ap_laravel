@@ -22,7 +22,7 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', function(){
    
-    dd(TestFacade::execute() );
+   return view('welcome');
 
 });
 

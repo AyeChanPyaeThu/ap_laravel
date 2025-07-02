@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreatedEvent;
 use App\Test;
 use App\Models\Post;
+use App\Models\User;
 use App\Mail\PostStored;
 use App\Models\Category;
 use App\Mail\PostCreated;
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Requests\storePostRequest;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\PostCreatedNotification;
 
 
 class HomeController extends Controller
@@ -33,6 +37,11 @@ class HomeController extends Controller
         // Mail::raw('Hello World', function($msg){
         //     $msg->to('hlaing@gmail.com')->subject('Ap Index Function');
         // });
+
+        // $user = User::find(1);
+        // $user->notify( new PostCreatedNotification() );
+        // Notification::send( User::find(1), new PostCreatedNotification()   );
+        echo 'noti sent'; exit();
 
         $data = Post::where('user_id', auth()->id() )->orderBy( 'id', 'desc' )->get();
         // $request->session()->flash('status', 'Task was successful!');
@@ -61,6 +70,7 @@ class HomeController extends Controller
          $validated = $request->validated(); 
         $post = Post::create( $validated + ['user_id'=>Auth::user()->id]);
 
+        event( new PostCreatedEvent($post));
         
         return redirect('/posts')->with('status', config('ap.message.created'));
     }
